@@ -82,3 +82,93 @@ Unless you explicitly state otherwise, any contribution intentionally
 submitted for inclusion in the work by you, as defined in the Apache-2.0
 license, shall be dual licensed as above, without any additional terms or
 conditions.
+
+
+## Run Web
+
+```
+wasm-pack build --target web
+```
+
+CReate an `index.html`
+
+run a server for example `python3 -m http.server`
+
+## Package npm 
+
+```
+wasm-pack build --target bundler
+```
+
+in `pkg` run `npm link` We now have an npm package, written in Rust, but compiled to WebAssembly. 
+
+```
+cd ..
+mkdir site
+cd site
+npm link wasm-game-of-life
+```
+
+Create a `package.json` file 
+
+```
+{
+  "scripts": {
+    "serve": "webpack-dev-server"
+  },
+  "dependencies": {
+    "hello-wasm": "^0.1.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}
+```
+
+Un `webpack.config.js`
+
+```
+const path = require("path");
+module.exports = {
+  entry: "./index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
+  },
+  mode: "development",
+};
+```
+
+un `index.js`
+
+```
+import("./node_modules/wasm-game-of-life/wasm_game_of_life.js").then((js) => {
+    js.greet("WebAssembly with npm");
+  });
+```
+
+un `index.html`
+
+
+```
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>wasm-game-of-life</title>
+  </head>
+  <body>
+    <script src="./index.js"></script>
+  </body>
+</html>
+```
+
+e infine
+
+```
+cd site
+npm install
+npm run serve
+```
