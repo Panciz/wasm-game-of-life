@@ -2,7 +2,14 @@ mod utils;
 
 use std::fmt;
 use wasm_bindgen::prelude::*;
+extern crate web_sys;
 
+// A macro to provide `println!(..)`-style syntax for `console.log` logging.
+macro_rules! log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
 // #[wasm_bindgen]
 // extern "C" {
 //     fn alert(s: &str);
@@ -34,6 +41,9 @@ impl Universe {
         (row * self.width + column) as usize
     }
     /*
+
+
+
     The live_neighbor_count method uses deltas and modulo to avoid special
      casing the edges of the universe with ifs. When applying a delta of -1, we add self.height - 1
      and let the modulo do its thing, rather than attempting to subtract 1. row and column can be 0,
@@ -65,6 +75,13 @@ impl Universe {
                 let idx = self.get_index(row, col);
                 let cell = self.cells[idx];
                 let live_neighbors = self.live_neighbor_count(row, col);
+                log!(
+                    "cell[{}, {}] is initially {:?} and has {} live neighbors",
+                    row,
+                    col,
+                    cell,
+                    live_neighbors
+                );
 
                 let next_cell = match (cell, live_neighbors) {
                     // Rule 1: Any live cell with fewer than two live neighbours
@@ -82,6 +99,7 @@ impl Universe {
                     // All other cells remain in the same state.
                     (otherwise, _) => otherwise,
                 };
+                log!("    it becomes {:?}", next_cell);
 
                 next[idx] = next_cell;
             }
