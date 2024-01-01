@@ -100,7 +100,8 @@ run a server for example `python3 -m http.server`
 wasm-pack build --target bundler
 ```
 
-in `pkg` run `npm link` We now have an npm package, written in Rust, but compiled to WebAssembly. 
+build in `pkg` and with run `npm link` We now have an npm package, written in Rust, but compiled to WebAssembly. 
+The link must be done only once.
 
 ```
 cd ..
@@ -171,4 +172,21 @@ e infine
 cd site
 npm install
 npm run serve
+```
+
+## Rebuild
+
+```
+wasm-pack build --target bundler
+cd site
+npm install
+npm run serve
+```
+
+## Tests
+
+Running tests
+
+```
+wasm-pack test --firefox --headless
 ```
