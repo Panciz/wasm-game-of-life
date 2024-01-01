@@ -106,6 +106,7 @@ impl Universe {
     }
 
     pub fn new() -> Universe {
+        utils::set_panic_hook();
         let width = 64;
         let height = 64;
 
@@ -127,7 +128,7 @@ impl Universe {
     }
 
     pub fn render(&self) -> String {
-        self.to_string()
+         self.to_string()
     }
 
       /// Set the width of the universe.
